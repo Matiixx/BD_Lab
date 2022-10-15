@@ -1,0 +1,421 @@
+create schema lab_3;
+CREATE SCHEMA
+u0cichostepski=> set search_path to lab_3;
+SET
+u0cichostepski=> show search_path ;
+ search_path
+-------------
+ lab_3
+(1 row)
+
+u0cichostepski=> create table customer
+u0cichostepski-> u0cichostepski-> (
+u0cichostepski(> u0cichostepski(>     customer_id                     serial                        ,
+u0cichostepski(> u0cichostepski(>     title                           char(4)                       ,
+u0cichostepski(> u0cichostepski(>     fname                           varchar(32)                   ,
+u0cichostepski(> u0cichostepski(>     lname                           varchar(32)           not null,
+u0cichostepski(> u0cichostepski(>     addressline                     varchar(64)                   ,
+u0cichostepski(> u0cichostepski(>     town                            varchar(32)                   ,
+u0cichostepski(> u0cichostepski(>     zipcode                         char(10)              not null,
+u0cichostepski(> u0cichostepski(>     phone                           varchar(16)                   ,
+u0cichostepski(> u0cichostepski(>     CONSTRAINT                      customer_pk PRIMARY KEY(customer_id)
+u0cichostepski(> u0cichostepski(> );
+u0cichostepski(> ;s;
+u0cichostepski(> ^C
+u0cichostepski=> create table customer
+u0cichostepski-> (
+u0cichostepski(>     customer_id                     serial                        ,
+u0cichostepski(>     title                           char(4)                       ,
+u0cichostepski(>     fname                           varchar(32)                   ,
+u0cichostepski(>     lname                           varchar(32)           not null,
+u0cichostepski(>     addressline                     varchar(64)                   ,
+u0cichostepski(>     town                            varchar(32)                   ,
+u0cichostepski(>     zipcode                         char(10)              not null,
+u0cichostepski(>     phone                           varchar(16)                   ,
+u0cichostepski(>     CONSTRAINT                      customer_pk PRIMARY KEY(customer_id)
+u0cichostepski(> );
+CREATE TABLE
+u0cichostepski=> create table item
+u0cichostepski-> (
+u0cichostepski(>     item_id                         serial                        ,
+u0cichostepski(>     description                     varchar(64)           not null,
+u0cichostepski(>     cost_price                      numeric(7,2)                  ,
+u0cichostepski(>     sell_price                      numeric(7,2)                  ,
+u0cichostepski(>     CONSTRAINT                      item_pk PRIMARY KEY(item_id)
+u0cichostepski(> );
+CREATE TABLE
+u0cichostepski=> \dt
+             List of relations
+ Schema |   Name   | Type  |     Owner
+--------+----------+-------+----------------
+ lab_3  | customer | table | u0cichostepski
+ lab_3  | item     | table | u0cichostepski
+(2 rows)
+
+u0cichostepski=> CREATE TABLE orderinfo( orderinfo_id SERIAL,
+u0cichostepski(>                         customer_id INTEGER NOT NULL REFERENCES customer(customer_id),
+u0cichostepski(>                         date_placed DATE NOT NULL,
+u0cichostepski(>                         date_shipped DATE,
+u0cichostepski(>                         shipping NUMERIC(7,2),
+u0cichostepski(>                         CONSTRAINT orderinfo_pk PRIMARY KEY(orderinfo_id));
+CREATE TABLE
+u0cichostepski=> \dt
+              List of relations
+ Schema |   Name    | Type  |     Owner
+--------+-----------+-------+----------------
+ lab_3  | customer  | table | u0cichostepski
+ lab_3  | item      | table | u0cichostepski
+ lab_3  | orderinfo | table | u0cichostepski
+(3 rows)
+
+u0cichostepski=> \d orderinfo
+                                       Table "lab_3.orderinfo"
+    Column    |     Type     | Collation | Nullable |                     Default
+--------------+--------------+-----------+----------+-------------------------------------------------
+ orderinfo_id | integer      |           | not null | nextval('orderinfo_orderinfo_id_seq'::regclass)
+ customer_id  | integer      |           | not null |
+ date_placed  | date         |           | not null |
+ date_shipped | date         |           |          |
+ shipping     | numeric(7,2) |           |          |
+Indexes:
+    "orderinfo_pk" PRIMARY KEY, btree (orderinfo_id)
+Foreign-key constraints:
+    "orderinfo_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+
+u0cichostepski=> drop table orderinfo ;
+DROP TABLE
+u0cichostepski=> CREATE TABLE orderinfo( orderinfo_id SERIAL,
+u0cichostepski(>                         town_id VARCHAR(32) NOT NULL REFERENCES customer(town), --b³¹d  - town nie ma klauzuli UNIQUE                                        u0cichostepski(>                         date_placed DATE NOT NULL,
+u0cichostepski(>                         date_shipped DATE,
+u0cichostepski(>                         shipping NUMERIC(7,2),
+u0cichostepski(>                         CONSTRAINT orderinfo_pk PRIMARY KEY(orderinfo_id));
+B£¥D:  brak ograniczenia unikalnego pasuj¹cego do danych kluczy dla tabeli referencyjnej "customer"
+u0cichostepski=> DROP TABLE orderinfo;
+B£¥D:  tabela "orderinfo" nie istnieje
+u0cichostepski=>
+u0cichostepski=> CREATE TABLE orderinfo( orderinfo_id SERIAL,
+u0cichostepski(>                         customer_id INTEGER NOT NULL,
+u0cichostepski(>                         date_placed DATE NOT NULL,
+u0cichostepski(>                         date_shipped DATE,
+u0cichostepski(>                         shipping NUMERIC(7,2),
+u0cichostepski(>                         CONSTRAINT orderinfo_pk PRIMARY KEY(orderinfo_id),
+u0cichostepski(>                         CONSTRAINT orderinfo_customer_id_fk FOREIGN KEY(customer_id) REFERENCES customer(customer_id)                                        );
+CREATE TABLE
+u0cichostepski=> \d orderinfo
+                                       Table "lab_3.orderinfo"
+    Column    |     Type     | Collation | Nullable |                     Default
+--------------+--------------+-----------+----------+-------------------------------------------------
+ orderinfo_id | integer      |           | not null | nextval('orderinfo_orderinfo_id_seq'::regclass)
+ customer_id  | integer      |           | not null |
+ date_placed  | date         |           | not null |
+ date_shipped | date         |           |          |
+ shipping     | numeric(7,2) |           |          |
+Indexes:
+    "orderinfo_pk" PRIMARY KEY, btree (orderinfo_id)
+Foreign-key constraints:
+    "orderinfo_customer_id_fk" FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+
+u0cichostepski=> insert into orderinfo(customer_id, date_placed, date_shipped, shipping) values(3,'13-03-2000','17-03-2000', 2.99);
+B£¥D:  wstawianie lub modyfikacja na tabeli "orderinfo" narusza klucz obcy "orderinfo_customer_id_fk"
+DETAIL:  Klucz (customer_id)=(3) nie wystêpuje w tabeli "customer".
+u0cichostepski=> insert into orderinfo(customer_id, date_placed, date_shipped, shipping) values(8,'23-06-2000','24-06-2000', 0.00);
+B£¥D:  wstawianie lub modyfikacja na tabeli "orderinfo" narusza klucz obcy "orderinfo_customer_id_fk"
+DETAIL:  Klucz (customer_id)=(8) nie wystêpuje w tabeli "customer".
+u0cichostepski=> insert into orderinfo(customer_id, date_placed, date_shipped, shipping) values(15,'02-09-2000','12-09-2000', 3.99);
+B£¥D:  wstawianie lub modyfikacja na tabeli "orderinfo" narusza klucz obcy "orderinfo_customer_id_fk"
+DETAIL:  Klucz (customer_id)=(15) nie wystêpuje w tabeli "customer".
+u0cichostepski=> insert into orderinfo(customer_id, date_placed, date_shipped, shipping) values(13,'03-09-2000','10-09-2000', 2.99);
+B£¥D:  wstawianie lub modyfikacja na tabeli "orderinfo" narusza klucz obcy "orderinfo_customer_id_fk"
+DETAIL:  Klucz (customer_id)=(13) nie wystêpuje w tabeli "customer".
+u0cichostepski=> insert into orderinfo(customer_id, date_placed, date_shipped, shipping) values(8,'21-07-2000','24-07-2000', 0.00);
+B£¥D:  wstawianie lub modyfikacja na tabeli "orderinfo" narusza klucz obcy "orderinfo_customer_id_fk"
+DETAIL:  Klucz (customer_id)=(8) nie wystêpuje w tabeli "customer".
+u0cichostepski=> select * from customer;
+ customer_id | title | fname | lname | addressline | town | zipcode | phone
+-------------+-------+-------+-------+-------------+------+---------+-------
+(0 rows)
+
+u0cichostepski=> \i pop_customer.sql
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> \i pop_item.sql
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> \i pop_orderinfo.sql
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> select * from customer;
+ customer_id | title |   fname   |  lname  |    addressline    |   town    |  zipcode   |  phone
+-------------+-------+-----------+---------+-------------------+-----------+------------+----------
+           1 | Miss  | Jenny     | Stones  | 27 Rowan Avenue   | Hightown  | NT2 1AQ    | 023 9876
+           2 | Mr    | Andrew    | Stones  | 52 The Willows    | Lowtown   | LT5 7RA    | 876 3527
+           3 | Miss  | Alex      | Matthew | 4 The Street      | Nicetown  | NT2 2TX    | 010 4567
+           4 | Mr    | Adrian    | Matthew | The Barn          | Yuleville | YV67 2WR   | 487 3871
+           5 | Mr    | Simon     | Cozens  | 7 Shady Lane      | Oahenham  | OA3 6QW    | 514 5926
+           6 | Mr    | Neil      | Matthew | 5 Pasture Lane    | Nicetown  | NT3 7RT    | 267 1232
+           7 | Mr    | Richard   | Stones  | 34 Holly Way      | Bingham   | BG4 2WE    | 342 5982
+           8 | Mrs   | Ann       | Stones  | 34 Holly Way      | Bingham   | BG4 2WE    | 342 5982
+           9 | Mrs   | Christine | Hickman | 36 Queen Street   | Histon    | HT3 5EM    | 342 5432
+          10 | Mr    | Mike      | Howard  | 86 Dysart Street  | Tibsville | TB3 7FG    | 505 5482
+          11 | Mr    | Dave      | Jones   | 54 Vale Rise      | Bingham   | BG3 8GD    | 342 8264
+          12 | Mr    | Richard   | Neill   | 42 Thached way    | Winersby  | WB3 6GQ    | 505 6482
+          13 | Mrs   | Laura     | Hendy   | 73 Margeritta Way | Oxbridge  | OX2 3HX    | 821 2335
+          14 | Mr    | Bill      | ONeill  | 2 Beamer Street   | Welltown  | WT3 8GM    | 435 1234
+          15 | Mr    | David     | Hudson  | 4 The Square      | Milltown  | MT2 6RT    | 961 4526
+(15 rows)
+
+u0cichostepski=> INSERT INTO orderinfo(customer_id, date_placed, shipping) VALUES (250, '25-01-2000', 0.00);
+B£¥D:  wstawianie lub modyfikacja na tabeli "orderinfo" narusza klucz obcy "orderinfo_customer_id_fk"
+DETAIL:  Klucz (customer_id)=(250) nie wystêpuje w tabeli "customer".
+u0cichostepski=> \d orderinfo
+                                       Table "lab_3.orderinfo"
+    Column    |     Type     | Collation | Nullable |                     Default
+--------------+--------------+-----------+----------+-------------------------------------------------
+ orderinfo_id | integer      |           | not null | nextval('orderinfo_orderinfo_id_seq'::regclass)
+ customer_id  | integer      |           | not null |
+ date_placed  | date         |           | not null |
+ date_shipped | date         |           |          |
+ shipping     | numeric(7,2) |           |          |
+Indexes:
+    "orderinfo_pk" PRIMARY KEY, btree (orderinfo_id)
+Foreign-key constraints:
+    "orderinfo_customer_id_fk" FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+
+u0cichostepski=> DELETE FROM customer WHERE customer_id =3;
+B£¥D:  modyfikacja lub usuniêcie na tabeli "customer" narusza klucz obcy "orderinfo_customer_id_fk" tabeli "orderinfo"
+DETAIL:  Klucz (customer_id)=(3) ma wci¹¿ odwo³anie w tabeli "orderinfo".
+u0cichostepski=> DROP TABLE orderinfo;
+DROP TABLE
+u0cichostepski=> CREATE TABLE orderinfo( orderinfo_id SERIAL,
+u0cichostepski(>                         customer_id INTEGER NOT NULL,
+u0cichostepski(>                         date_placed DATE NOT NULL,
+u0cichostepski(>                         date_shipped DATE,
+u0cichostepski(>                         shipping NUMERIC(7,2),
+u0cichostepski(>                         CONSTRAINT orderinfo_pk PRIMARY KEY(orderinfo_id),
+u0cichostepski(>                         CONSTRAINT orderinfo_customer_id_fk FOREIGN KEY(customer_id) REFERENCES customer(customer_id)                                        ON DELETE CASCADE);
+CREATE TABLE
+u0cichostepski=> \d orderinfo
+                                       Table "lab_3.orderinfo"
+    Column    |     Type     | Collation | Nullable |                     Default
+--------------+--------------+-----------+----------+-------------------------------------------------
+ orderinfo_id | integer      |           | not null | nextval('orderinfo_orderinfo_id_seq'::regclass)
+ customer_id  | integer      |           | not null |
+ date_placed  | date         |           | not null |
+ date_shipped | date         |           |          |
+ shipping     | numeric(7,2) |           |          |
+Indexes:
+    "orderinfo_pk" PRIMARY KEY, btree (orderinfo_id)
+Foreign-key constraints:
+    "orderinfo_customer_id_fk" FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
+
+u0cichostepski=> CREATE TABLE orderline( orderinfo_id INTEGER NOT NULL,
+u0cichostepski(>                         item_id INTEGER NOT NULL,
+u0cichostepski(>                         quantity INTEGER NOT NULL,
+u0cichostepski(>                         CONSTRAINT orderline_pk PRIMARY KEY(orderinfo_id, item_id),
+u0cichostepski(>                         CONSTRAINT orderline_orderinfo_id_fk FOREIGN KEY(orderinfo_id) REFERENCES orderinfo (orderinf                                        o_id),
+u0cichostepski(>                         CONSTRAINT orderline_item_id_fk FOREIGN KEY(item_id) REFERENCES item (item_id));
+CREATE TABLE
+u0cichostepski=> \d orderline
+                 Table "lab_3.orderline"
+    Column    |  Type   | Collation | Nullable | Default
+--------------+---------+-----------+----------+---------
+ orderinfo_id | integer |           | not null |
+ item_id      | integer |           | not null |
+ quantity     | integer |           | not null |
+Indexes:
+    "orderline_pk" PRIMARY KEY, btree (orderinfo_id, item_id)
+Foreign-key constraints:
+    "orderline_item_id_fk" FOREIGN KEY (item_id) REFERENCES item(item_id)
+    "orderline_orderinfo_id_fk" FOREIGN KEY (orderinfo_id) REFERENCES orderinfo(orderinfo_id)
+
+u0cichostepski=> \i pop_orderline.sql
+psql:pop_orderline.sql:1: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(1) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:2: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(1) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:3: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(1) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:4: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(2) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:5: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(2) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:6: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(2) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:7: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(2) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:8: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(3) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:9: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(3) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:10: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(4) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:11: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(5) nie wystêpuje w tabeli "orderinfo".
+psql:pop_orderline.sql:12: B£¥D:  wstawianie lub modyfikacja na tabeli "orderline" narusza klucz obcy "orderline_orderinfo_id_fk"
+DETAIL:  Klucz (orderinfo_id)=(5) nie wystêpuje w tabeli "orderinfo".
+u0cichostepski=> select * from orderinfo;
+ orderinfo_id | customer_id | date_placed | date_shipped | shipping
+--------------+-------------+-------------+--------------+----------
+(0 rows)
+
+u0cichostepski=> \i pop_orderinfo.sql
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> select * from orderinfo;
+ orderinfo_id | customer_id | date_placed | date_shipped | shipping
+--------------+-------------+-------------+--------------+----------
+            1 |           3 | 2000-03-13  | 2000-03-17   |     2.99
+            2 |           8 | 2000-06-23  | 2000-06-24   |     0.00
+            3 |          15 | 2000-09-02  | 2000-09-12   |     3.99
+            4 |          13 | 2000-09-03  | 2000-09-10   |     2.99
+            5 |           8 | 2000-07-21  | 2000-07-24   |     0.00
+(5 rows)
+
+u0cichostepski=> \i pop_orderline.sql
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> select * from orderline ;
+ orderinfo_id | item_id | quantity
+--------------+---------+----------
+            1 |       4 |        1
+            1 |       7 |        1
+            1 |       9 |        1
+            2 |       1 |        1
+            2 |      10 |        1
+            2 |       7 |        2
+            2 |       4 |        2
+            3 |       2 |        1
+            3 |       1 |        1
+            4 |       5 |        2
+            5 |       1 |        1
+            5 |       3 |        1
+(12 rows)
+
+u0cichostepski=> SELECT * FROM customer, orderinfo;
+u0cichostepski=> SELECT * FROM customer, orderinfo limit 5;
+ customer_id | title | fname  |  lname  |   addressline   |   town    |  zipcode   |  phone   | orderinfo_id | customer_id | date_placed | date_shipped | shipping
+-------------+-------+--------+---------+-----------------+-----------+------------+----------+--------------+-------------+-------------+--------------+----------
+           1 | Miss  | Jenny  | Stones  | 27 Rowan Avenue | Hightown  | NT2 1AQ    | 023 9876 |            1 |           3 | 2000-03-13  | 2000-03-17   |     2.99
+           2 | Mr    | Andrew | Stones  | 52 The Willows  | Lowtown   | LT5 7RA    | 876 3527 |            1 |           3 | 2000-03-13  | 2000-03-17   |     2.99
+           3 | Miss  | Alex   | Matthew | 4 The Street    | Nicetown  | NT2 2TX    | 010 4567 |            1 |           3 | 2000-03-13  | 2000-03-17   |     2.99
+           4 | Mr    | Adrian | Matthew | The Barn        | Yuleville | YV67 2WR   | 487 3871 |            1 |           3 | 2000-03-13  | 2000-03-17   |     2.99
+           5 | Mr    | Simon  | Cozens  | 7 Shady Lane    | Oahenham  | OA3 6QW    | 514 5926 |            1 |           3 | 2000-03-13  | 2000-03-17   |     2.99
+(5 rows)
+
+u0cichostepski=> select c.fname, o.orderinfo_id from customer c join orderinfo o on c.customer_id=o.customer_id where c.fname='Ann' and c.lname='Stones';
+ fname | orderinfo_id
+-------+--------------
+ Ann   |            2
+ Ann   |            5
+(2 rows)
+
+u0cichostepski=> SELECT c.fname, o.date_placed FROM customer c JOIN orderinfo o ON c.customer_id=o.customer_id WHERE c.fname = 'Ann' AND c.lname = 'Stones';
+ fname | date_placed
+-------+-------------
+ Ann   | 2000-06-23
+ Ann   | 2000-07-21
+(2 rows)
+
+u0cichostepski=> SELECT c.fname, o.orderinfo_id, o.date_placed FROM customer c JOIN orderinfo o ON c.customer_id=o.customer_id WHERE c.fname = 'Ann' AND c.lname = 'Stones';
+ fname | orderinfo_id | date_placed
+-------+--------------+-------------
+ Ann   |            2 | 2000-06-23
+ Ann   |            5 | 2000-07-21
+(2 rows)
+
+u0cichostepski=> SELECT c.fname, o.orderinfo_id, o.date_placed, ol.item_id FROM customer c JOIN orderinfo o ON c.customer_id=o.customer_id WHERE c.fname = 'Ann' AND c.lname = 'Stones' join orderline ol on o.orderinfo_id=ol.orderinfo_id;
+B£¥D:  b³¹d sk³adni w lub blisko "join"
+LINE 1: ...r_id WHERE c.fname = 'Ann' AND c.lname = 'Stones' join order...
+                                                             ^
+u0cichostepski=> SELECT c.fname, o.orderinfo_id, o.date_placed, ol.item_id FROM customer c JOIN orderinfo o ON c.customer_id=o.customer_id join orderline ol on o.orderinfo_id=ol.orderinfo_id WHERE c.fname = 'Ann' AND c.lname = 'Stones';
+ fname | orderinfo_id | date_placed | item_id
+-------+--------------+-------------+---------
+ Ann   |            2 | 2000-06-23  |       1
+ Ann   |            2 | 2000-06-23  |       4
+ Ann   |            2 | 2000-06-23  |       7
+ Ann   |            2 | 2000-06-23  |      10
+ Ann   |            5 | 2000-07-21  |       1
+ Ann   |            5 | 2000-07-21  |       3
+(6 rows)
+
+u0cichostepski=> select * from orderline ;
+ orderinfo_id | item_id | quantity
+--------------+---------+----------
+            1 |       4 |        1
+            1 |       7 |        1
+            1 |       9 |        1
+            2 |       1 |        1
+            2 |      10 |        1
+            2 |       7 |        2
+            2 |       4 |        2
+            3 |       2 |        1
+            3 |       1 |        1
+            4 |       5 |        2
+            5 |       1 |        1
+            5 |       3 |        1
+(12 rows)
+
+u0cichostepski=> SELECT c.fname, o.orderinfo_id, o.date_placed, ol.item_id, i.description FROM customer c JOIN orderinfo o ON c.customer_id=o.customer_id join orderline ol on o.orderinfo_id=ol.orderinfo_id join item i on i.item_id=ol.item_id WHERE c.fname = 'Ann' AND c.lname = 'Stones';
+ fname | orderinfo_id | date_placed | item_id | description
+-------+--------------+-------------+---------+-------------
+ Ann   |            2 | 2000-06-23  |       1 | Wood Puzzle
+ Ann   |            2 | 2000-06-23  |       4 | Tissues
+ Ann   |            2 | 2000-06-23  |       7 | Fan Large
+ Ann   |            2 | 2000-06-23  |      10 | Carrier Bag
+ Ann   |            5 | 2000-07-21  |       1 | Wood Puzzle
+ Ann   |            5 | 2000-07-21  |       3 | Linux CD
+(6 rows)
+
+u0cichostepski=> select * from item;
+ item_id |  description  | cost_price | sell_price
+---------+---------------+------------+------------
+       1 | Wood Puzzle   |      15.23 |      21.95
+       2 | Rubic Cube    |       7.45 |      11.49
+       3 | Linux CD      |       1.99 |       2.49
+       4 | Tissues       |       2.11 |       3.99
+       5 | Picture Frame |       7.54 |       9.95
+       6 | Fan Small     |       9.23 |      15.75
+       7 | Fan Large     |      13.36 |      19.95
+       8 | Toothbrush    |       0.75 |       1.45
+       9 | Roman Coin    |       2.34 |       2.45
+      10 | Carrier Bag   |       0.01 |       0.00
+      11 | Speakers      |      19.73 |      25.32
+(11 rows)
