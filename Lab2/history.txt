@@ -1,0 +1,668 @@
+SHOW search_path;
+   search_path
+-----------------
+ "$user", public
+(1 row)
+
+u0cichostepski=> create schema nazwa_schematu;
+CREATE SCHEMA
+u0cichostepski=> SHOW search_path;
+   search_path
+-----------------
+ "$user", public
+(1 row)
+
+u0cichostepski=> drop schema nazwa_schematu cascade ;
+DROP SCHEMA
+u0cichostepski=> create schema lab_2;
+CREATE SCHEMA
+u0cichostepski=> create table lab_2.nowa (id INT, txt TEXT);
+CREATE TABLE
+u0cichostepski=> show search_path
+u0cichostepski-> ;
+   search_path
+-----------------
+ "$user", public
+(1 row)
+
+u0cichostepski=> set search_path to lab_2 ;
+SET
+u0cichostepski=> show search_path
+;
+ search_path
+-------------
+ lab_2
+(1 row)
+
+u0cichostepski=> CREATE TABLE test (Imie VARCHAR(32) DEFAULT 'Jan',Numer INT not null,Pensja INT check (pensja >100),Test_id INT PRIMARY KEY,Kod INT UNIQUE);
+CREATE TABLE
+u0cichostepski=> show
+Display all 249 possibilities? (y or n)
+u0cichostepski=> show ta
+
+u0cichostepski=> show ta
+
+u0cichostepski=> show search_path ;
+ search_path
+-------------
+ lab_2
+(1 row)
+
+u0cichostepski=> \d test
+                                Table "lab_2.test"
+ Column  |         Type          | Collation | Nullable |         Default
+---------+-----------------------+-----------+----------+--------------------------
+ imie    | character varying(32) |           |          | 'Jan'::character varying
+ numer   | integer               |           | not null |
+ pensja  | integer               |           |          |
+ test_id | integer               |           | not null |
+ kod     | integer               |           |          |
+Indexes:
+    "test_pkey" PRIMARY KEY, btree (test_id)
+    "test_kod_key" UNIQUE CONSTRAINT, btree (kod)
+Check constraints:
+    "test_pensja_check" CHECK (pensja > 100)
+
+u0cichostepski=> alter table test add column Nazwisko varch
+
+u0cichostepski=> alter table test add column Nazwisko varchar(32);
+ALTER TABLE
+u0cichostepski=> \d test
+                                 Table "lab_2.test"
+  Column  |         Type          | Collation | Nullable |         Default
+----------+-----------------------+-----------+----------+--------------------------
+ imie     | character varying(32) |           |          | 'Jan'::character varying
+ numer    | integer               |           | not null |
+ pensja   | integer               |           |          |
+ test_id  | integer               |           | not null |
+ kod      | integer               |           |          |
+ nazwisko | character varying(32) |           |          |
+Indexes:
+    "test_pkey" PRIMARY KEY, btree (test_id)
+    "test_kod_key" UNIQUE CONSTRAINT, btree (kod)
+Check constraints:
+    "test_pensja_check" CHECK (pensja > 100)
+
+u0cichostepski=> alter table test rename COLUMN Nazw
+
+u0cichostepski=> alter table test rename COLUMN Nazwisko to Nazwa
+u0cichostepski-> ;
+ALTER TABLE
+u0cichostepski=> alter table test rename TO test_1;
+ALTER TABLE
+u0cichostepski=> \d test_
+Did not find any relation named "test_".
+u0cichostepski=> \d test_1
+                               Table "lab_2.test_1"
+ Column  |         Type          | Collation | Nullable |         Default
+---------+-----------------------+-----------+----------+--------------------------
+ imie    | character varying(32) |           |          | 'Jan'::character varying
+ numer   | integer               |           | not null |
+ pensja  | integer               |           |          |
+ test_id | integer               |           | not null |
+ kod     | integer               |           |          |
+ nazwa   | character varying(32) |           |          |
+Indexes:
+    "test_pkey" PRIMARY KEY, btree (test_id)
+    "test_kod_key" UNIQUE CONSTRAINT, btree (kod)
+Check constraints:
+    "test_pensja_check" CHECK (pensja > 100)
+
+u0cichostepski=> drop table test_1 ;
+DROP TABLE
+u0cichostepski=> CREATE TABLE test (Imie VARCHAR(32) DEFAULT 'Jan',Numer INT not null,Pensja INT check (pensja >100),Test_id INT PRIMARY KEY,Kod INT UNIQUE);
+CREATE TABLE
+u0cichostepski=> \d test
+                                Table "lab_2.test"
+ Column  |         Type          | Collation | Nullable |         Default
+---------+-----------------------+-----------+----------+--------------------------
+ imie    | character varying(32) |           |          | 'Jan'::character varying
+ numer   | integer               |           | not null |
+ pensja  | integer               |           |          |
+ test_id | integer               |           | not null |
+ kod     | integer               |           |          |
+Indexes:
+    "test_pkey" PRIMARY KEY, btree (test_id)
+    "test_kod_key" UNIQUE CONSTRAINT, btree (kod)
+Check constraints:
+    "test_pensja_check" CHECK (pensja > 100)
+
+u0cichostepski=> INSERT INTO test (Imie, Numer, Pensja, Test_id, Kod) VALUES ('Tomasz',12,123,41,55);
+INSERT 0 1
+u0cichostepski=> select * from test ;
+  imie  | numer | pensja | test_id | kod
+--------+-------+--------+---------+-----
+ Tomasz |    12 |    123 |      41 |  55
+(1 row)
+
+u0cichostepski=> INSERT INTO test VALUES ('Tomasz',12,123,141,55);
+B£¥D:  podwójna wartoœæ klucza narusza ograniczenie unikalnoœci "test_kod_key"
+DETAIL:  Klucz (kod)=(55) ju¿ istnieje.
+u0cichostepski=> SELECT Test_id, Imie, Pensja FROM test ;
+ test_id |  imie  | pensja
+---------+--------+--------
+      41 | Tomasz |    123
+(1 row)
+
+u0cichostepski=> SELECT Test_id as ID, Imie, Pensja FROM test ;
+ id |  imie  | pensja
+----+--------+--------
+ 41 | Tomasz |    123
+(1 row)
+
+u0cichostepski=> INSERT INTO test VALUES ('Tomasz',12,123,41,54);
+B£¥D:  podwójna wartoœæ klucza narusza ograniczenie unikalnoœci "test_pkey"
+DETAIL:  Klucz (test_id)=(41) ju¿ istnieje.
+u0cichostepski=> INSERT INTO test VALUES ('Tomasz',12,10,4,5);
+B£¥D:  nowy rekord dla relacji "test" narusza ograniczenie sprawdzaj¹ce "test_pensja_check"
+DETAIL:  Niepoprawne ograniczenia wiersza (Tomasz, 12, 10, 4, 5).
+u0cichostepski=> INSERT INTO test (Pensja, Test_id, Kod) VALUES (1000,24,25);
+B£¥D:  pusta wartoœæ w kolumnie "numer" narusza ograniczenie wymaganej wartoœci
+DETAIL:  Niepoprawne ograniczenia wiersza (Jan, null, 1000, 24, 25).
+u0cichostepski=> CREATE TABLE test_1 (Numer INT ,Pensja INT ,Test_id INT PRIMARY KEY, CONSTRAINT t1 CHECK (Numer < Pensja));
+CREATE TABLE
+u0cichostepski=> \d test_1
+                Table "lab_2.test_1"
+ Column  |  Type   | Collation | Nullable | Default
+---------+---------+-----------+----------+---------
+ numer   | integer |           |          |
+ pensja  | integer |           |          |
+ test_id | integer |           | not null |
+Indexes:
+    "test_1_pkey" PRIMARY KEY, btree (test_id)
+Check constraints:
+    "t1" CHECK (numer < pensja)
+
+u0cichostepski=> INSERT INTO test_1 (Numer, Pensja,Test_id) VALUES (1222,1000,14);
+B£¥D:  nowy rekord dla relacji "test_1" narusza ograniczenie sprawdzaj¹ce "t1"
+DETAIL:  Niepoprawne ograniczenia wiersza (1222, 1000, 14).
+u0cichostepski=> select * from test;
+  imie  | numer | pensja | test_id | kod
+--------+-------+--------+---------+-----
+ Tomasz |    12 |    123 |      41 |  55
+(1 row)
+
+u0cichostepski=> update test set pensja = 200;
+UPDATE 1
+u0cichostepski=> select * from test;
+  imie  | numer | pensja | test_id | kod
+--------+-------+--------+---------+-----
+ Tomasz |    12 |    200 |      41 |  55
+(1 row)
+
+u0cichostepski=> update test set pensja = 300 where Imie = "Tomasz";
+B£¥D:  kolumna "Tomasz" nie istnieje
+LINE 1: update test set pensja = 300 where Imie = "Tomasz";
+                                                  ^
+u0cichostepski=> update test set pensja = 300 where Imie='Tomasz';
+UPDATE 1
+u0cichostepski=> select * from test;
+  imie  | numer | pensja | test_id | kod
+--------+-------+--------+---------+-----
+ Tomasz |    12 |    300 |      41 |  55
+(1 row)
+
+u0cichostepski=> delete from test where Imie='Tomasz';
+DELETE 1
+u0cichostepski=> select * from test;
+ imie | numer | pensja | test_id | kod
+------+-------+--------+---------+-----
+(0 rows)
+
+u0cichostepski=> drop table test cascade ;
+DROP TABLE
+u0cichostepski=>     create table customer
+u0cichostepski-> (
+u0cichostepski(>     customer_id                     serial                        ,
+u0cichostepski(>     title                           char(4)                       ,
+u0cichostepski(>     fname                           varchar(32)                   ,
+u0cichostepski(>     lname                           varchar(32)           not null,
+u0cichostepski(>     addressline                     varchar(64)                   ,
+u0cichostepski(>     town                            varchar(32)                   ,
+u0cichostepski(>     zipcode                         char(10)              not null,
+u0cichostepski(>     phone                           varchar(16)                   ,
+u0cichostepski(>     CONSTRAINT                      customer_pk PRIMARY KEY(customer_id)
+u0cichostepski(> );
+CREATE TABLE
+u0cichostepski=> \d customer
+                                           Table "lab_2.customer"
+   Column    |         Type          | Collation | Nullable |                    Default
+-------------+-----------------------+-----------+----------+-----------------------------------------------
+ customer_id | integer               |           | not null | nextval('customer_customer_id_seq'::regclass)
+ title       | character(4)          |           |          |
+ fname       | character varying(32) |           |          |
+ lname       | character varying(32) |           | not null |
+ addressline | character varying(64) |           |          |
+ town        | character varying(32) |           |          |
+ zipcode     | character(10)         |           | not null |
+ phone       | character varying(16) |           |          |
+Indexes:
+    "customer_pk" PRIMARY KEY, btree (customer_id)
+
+u0cichostepski=>  create table item
+u0cichostepski-> (
+u0cichostepski(>     item_id                         serial                        ,
+u0cichostepski(>     description                     varchar(64)           not null,
+u0cichostepski(>     cost_price                      numeric(7,2)                  ,
+u0cichostepski(>     sell_price                      numeric(7,2)                  ,
+u0cichostepski(>     CONSTRAINT                      item_pk PRIMARY KEY(item_id)
+u0cichostepski(> );
+CREATE TABLE
+u0cichostepski=> show search_path ;
+ search_path
+-------------
+ lab_2
+(1 row)
+
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Miss','Jenny','Stones','27 Rowan Avenue','Hightown','NT2 1AQ','023 9876');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Andrew','Stones','52 The Willows','Lowtown','LT5 7RA','876 3527');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Miss','Alex','Matthew','4 The Street','Nicetown','NT2 2TX','010 4567');
+insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Neil','Matthew','5 Pasture Lane','Nicetown','NT3 7RT','267 1232');
+insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Richard','Stones','34 Holly Way','Bingham','BG4 2WE','342 5982');
+insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mrs','Ann','Stones','34 Holly Way','Bingham','BG4 2WE','342 5982');
+insert into customer(title, fname, lnamINSERT 0 1
+e, addressline, town, zipcode, phone) values('Mrs','Christine','Hickman','36 Queen Street','Histon','HT3 5EM','342 5432');
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Adrian','Matthew','The Barn','Yuleville','YV67 2WR','487 3871');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Simon','Cozens','7 Shady Lane','Oahenham','OA3 6QW','514 5926');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Neil','Matthew','5 Pasture Lane','Nicetown','NT3 7RT','267 1232');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Richard','Stones','34 Holly Way','Bingham','BG4 2WE','342 5982');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mrs','Ann','Stones','34 Holly Way','Bingham','BG4 2WE','342 5982');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mrs','Christine','Hickman','36 Queen Street','Histon','HT3 5EM','342 5432');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Mike','Howard','86 Dysart Street','Tibsville','TB3 7FG','505 5482');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Dave','Jones','54 Vale Rise','Bingham','BG3 8GD','342 8264');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Richard','Neill','42 Thached way','Winersby','WB3 6GQ','505 6482');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mrs','Laura','Hendy','73 Margeritta Way','Oxbridge','OX2 3HX','821 2335');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','Bill','ONeill','2 Beamer Street','Welltown','WT3 8GM','435 1234');
+INSERT 0 1
+u0cichostepski=> insert into customer(title, fname, lname, addressline, town, zipcode, phone) values('Mr','David','Hudson','4 The Square','Milltown','MT2 6RT','961 4526');
+INSERT 0 1
+u0cichostepski=> select * from customer;
+ customer_id | title |   fname   |  lname  |    addressline    |   town    |  zipcode   |  phone
+-------------+-------+-----------+---------+-------------------+-----------+------------+----------
+           1 | Miss  | Jenny     | Stones  | 27 Rowan Avenue   | Hightown  | NT2 1AQ    | 023 9876
+           2 | Mr    | Andrew    | Stones  | 52 The Willows    | Lowtown   | LT5 7RA    | 876 3527
+           3 | Miss  | Alex      | Matthew | 4 The Street      | Nicetown  | NT2 2TX    | 010 4567
+           4 | Mr    | Adrian    | Matthew | The Barn          | Yuleville | YV67 2WR   | 487 3871
+           5 | Mr    | Simon     | Cozens  | 7 Shady Lane      | Oahenham  | OA3 6QW    | 514 5926
+           6 | Mr    | Neil      | Matthew | 5 Pasture Lane    | Nicetown  | NT3 7RT    | 267 1232
+           7 | Mr    | Richard   | Stones  | 34 Holly Way      | Bingham   | BG4 2WE    | 342 5982
+           8 | Mrs   | Ann       | Stones  | 34 Holly Way      | Bingham   | BG4 2WE    | 342 5982
+           9 | Mrs   | Christine | Hickman | 36 Queen Street   | Histon    | HT3 5EM    | 342 5432
+          10 | Mr    | Mike      | Howard  | 86 Dysart Street  | Tibsville | TB3 7FG    | 505 5482
+          11 | Mr    | Dave      | Jones   | 54 Vale Rise      | Bingham   | BG3 8GD    | 342 8264
+          12 | Mr    | Richard   | Neill   | 42 Thached way    | Winersby  | WB3 6GQ    | 505 6482
+          13 | Mrs   | Laura     | Hendy   | 73 Margeritta Way | Oxbridge  | OX2 3HX    | 821 2335
+          14 | Mr    | Bill      | ONeill  | 2 Beamer Street   | Welltown  | WT3 8GM    | 435 1234
+          15 | Mr    | David     | Hudson  | 4 The Square      | Milltown  | MT2 6RT    | 961 4526
+(15 rows)
+
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Wood Puzzle', 15.23, 21.95);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Rubic Cube', 7.45, 11.49);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Linux CD', 1.99, 2.49);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Tissues', 2.11, 3.99);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Picture Frame', 7.54, 9.95);
+insert into item(description, cost_price, sell_price) values('Fan Small', 9.23, 15.75);
+insert into item(description, cost_price, sell_price) values('Fan Large', 13.36, 19.95);
+insert into item(description, cost_price, sell_price) values('Toothbrush', 0.75, 1.45);
+insert into item(description, cost_price, sell_price) values('Roman Coin', 2.34, 2.45);
+insert into item(description, cost_price, sell_price) values('Carrier Bag', 0.01, 0.0);
+insert into item(description, cost_price, sell_price) values('Speakers', 19.73, 25.32);INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Fan Small', 9.23, 15.75);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Fan Large', 13.36, 19.95);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Toothbrush', 0.75, 1.45);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Roman Coin', 2.34, 2.45);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Carrier Bag', 0.01, 0.0);
+INSERT 0 1
+u0cichostepski=> insert into item(description, cost_price, sell_price) values('Speakers', 19.73, 25.32);
+INSERT 0 1
+u0cichostepski=> select * from item;
+ item_id |  description  | cost_price | sell_price
+---------+---------------+------------+------------
+       1 | Wood Puzzle   |      15.23 |      21.95
+       2 | Rubic Cube    |       7.45 |      11.49
+       3 | Linux CD      |       1.99 |       2.49
+       4 | Tissues       |       2.11 |       3.99
+       5 | Picture Frame |       7.54 |       9.95
+       6 | Fan Small     |       9.23 |      15.75
+       7 | Fan Large     |      13.36 |      19.95
+       8 | Toothbrush    |       0.75 |       1.45
+       9 | Roman Coin    |       2.34 |       2.45
+      10 | Carrier Bag   |       0.01 |       0.00
+      11 | Speakers      |      19.73 |      25.32
+(11 rows)
+
+u0cichostepski=> delete from item *;
+DELETE 11
+u0cichostepski=> select * from item;
+ item_id | description | cost_price | sell_price
+---------+-------------+------------+------------
+(0 rows)
+
+u0cichostepski=> \i pop_item.sql;
+pop_item.sql: Nie ma takiego pliku ani katalogu
+u0cichostepski=> exit
+0cichostepski@pascal:~$ cd BD/Lab2/
+0cichostepski@pascal:~/BD/Lab2$ psql_login
+Password for user u0cichostepski:
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: KATASTROFALNY:  autoryzacja has³em nie powiod³a siê dla u¿ytkownika "u0cichostepski"
+0cichostepski@pascal:~/BD/Lab2$ psql_login
+Password for user u0cichostepski:
+psql (13.4 (Debian 13.4-1.pgdg90+1), server 9.6.23)
+Type "help" for help.
+
+u0cichostepski=> \i pop_item.sql;
+psql:pop_item.sql:1: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:2: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:3: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:4: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:5: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:6: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:7: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:8: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:9: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:10: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+psql:pop_item.sql:11: B£¥D:  relacja "item" nie istnieje
+LINE 1: insert into item(description, cost_price, sell_price) values...
+                    ^
+u0cichostepski=> set search_path to lab_2;
+SET
+u0cichostepski=> \i pop_item.sql;
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> SELECT * FROM customer;
+ customer_id | title |   fname   |  lname  |    addressline    |   town    |  zipcode   |  phone
+-------------+-------+-----------+---------+-------------------+-----------+------------+----------
+           1 | Miss  | Jenny     | Stones  | 27 Rowan Avenue   | Hightown  | NT2 1AQ    | 023 9876
+           2 | Mr    | Andrew    | Stones  | 52 The Willows    | Lowtown   | LT5 7RA    | 876 3527
+           3 | Miss  | Alex      | Matthew | 4 The Street      | Nicetown  | NT2 2TX    | 010 4567
+           4 | Mr    | Adrian    | Matthew | The Barn          | Yuleville | YV67 2WR   | 487 3871
+           5 | Mr    | Simon     | Cozens  | 7 Shady Lane      | Oahenham  | OA3 6QW    | 514 5926
+           6 | Mr    | Neil      | Matthew | 5 Pasture Lane    | Nicetown  | NT3 7RT    | 267 1232
+           7 | Mr    | Richard   | Stones  | 34 Holly Way      | Bingham   | BG4 2WE    | 342 5982
+           8 | Mrs   | Ann       | Stones  | 34 Holly Way      | Bingham   | BG4 2WE    | 342 5982
+           9 | Mrs   | Christine | Hickman | 36 Queen Street   | Histon    | HT3 5EM    | 342 5432
+          10 | Mr    | Mike      | Howard  | 86 Dysart Street  | Tibsville | TB3 7FG    | 505 5482
+          11 | Mr    | Dave      | Jones   | 54 Vale Rise      | Bingham   | BG3 8GD    | 342 8264
+          12 | Mr    | Richard   | Neill   | 42 Thached way    | Winersby  | WB3 6GQ    | 505 6482
+          13 | Mrs   | Laura     | Hendy   | 73 Margeritta Way | Oxbridge  | OX2 3HX    | 821 2335
+          14 | Mr    | Bill      | ONeill  | 2 Beamer Street   | Welltown  | WT3 8GM    | 435 1234
+          15 | Mr    | David     | Hudson  | 4 The Square      | Milltown  | MT2 6RT    | 961 4526
+(15 rows)
+
+u0cichostepski=> \i pop_item.sql;
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> SELECT * FROM item;
+ item_id |  description  | cost_price | sell_price
+---------+---------------+------------+------------
+      12 | Wood Puzzle   |      15.23 |      21.95
+      13 | Rubic Cube    |       7.45 |      11.49
+      14 | Linux CD      |       1.99 |       2.49
+      15 | Tissues       |       2.11 |       3.99
+      16 | Picture Frame |       7.54 |       9.95
+      17 | Fan Small     |       9.23 |      15.75
+      18 | Fan Large     |      13.36 |      19.95
+      19 | Toothbrush    |       0.75 |       1.45
+      20 | Roman Coin    |       2.34 |       2.45
+      21 | Carrier Bag   |       0.01 |       0.00
+      22 | Speakers      |      19.73 |      25.32
+      23 | Wood Puzzle   |      15.23 |      21.95
+      24 | Rubic Cube    |       7.45 |      11.49
+      25 | Linux CD      |       1.99 |       2.49
+      26 | Tissues       |       2.11 |       3.99
+      27 | Picture Frame |       7.54 |       9.95
+      28 | Fan Small     |       9.23 |      15.75
+      29 | Fan Large     |      13.36 |      19.95
+      30 | Toothbrush    |       0.75 |       1.45
+      31 | Roman Coin    |       2.34 |       2.45
+      32 | Carrier Bag   |       0.01 |       0.00
+      33 | Speakers      |      19.73 |      25.32
+(22 rows)
+
+u0cichostepski=> delete FROM item * cascade;
+DELETE 22
+u0cichostepski=> \i pop_item.sql;
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+u0cichostepski=> SELECT * FROM item;
+ item_id |  description  | cost_price | sell_price
+---------+---------------+------------+------------
+      34 | Wood Puzzle   |      15.23 |      21.95
+      35 | Rubic Cube    |       7.45 |      11.49
+      36 | Linux CD      |       1.99 |       2.49
+      37 | Tissues       |       2.11 |       3.99
+      38 | Picture Frame |       7.54 |       9.95
+      39 | Fan Small     |       9.23 |      15.75
+      40 | Fan Large     |      13.36 |      19.95
+      41 | Toothbrush    |       0.75 |       1.45
+      42 | Roman Coin    |       2.34 |       2.45
+      43 | Carrier Bag   |       0.01 |       0.00
+      44 | Speakers      |      19.73 |      25.32
+(11 rows)
+
+u0cichostepski=> select town, ln
+
+u0cichostepski=> select town, lname as nazwisko from customer order by town asc, lna
+
+u0cichostepski=> select town, lname as nazwisko from customer order by town asc, lname desc;
+   town    | nazwisko
+-----------+----------
+ Bingham   | Stones
+ Bingham   | Stones
+ Bingham   | Jones
+ Hightown  | Stones
+ Histon    | Hickman
+ Lowtown   | Stones
+ Milltown  | Hudson
+ Nicetown  | Matthew
+ Nicetown  | Matthew
+ Oahenham  | Cozens
+ Oxbridge  | Hendy
+ Tibsville | Howard
+ Welltown  | ONeill
+ Winersby  | Neill
+ Yuleville | Matthew
+(15 rows)
+
+u0cichostepski=> SELECT town, lname AS nazwisko FROM customer ORDER BY town, lname DESC;
+   town    | nazwisko
+-----------+----------
+ Bingham   | Stones
+ Bingham   | Stones
+ Bingham   | Jones
+ Hightown  | Stones
+ Histon    | Hickman
+ Lowtown   | Stones
+ Milltown  | Hudson
+ Nicetown  | Matthew
+ Nicetown  | Matthew
+ Oahenham  | Cozens
+ Oxbridge  | Hendy
+ Tibsville | Howard
+ Welltown  | ONeill
+ Winersby  | Neill
+ Yuleville | Matthew
+(15 rows)
+
+u0cichostepski=> select distinct town from customer;
+   town
+-----------
+ Lowtown
+ Histon
+ Milltown
+ Oxbridge
+ Oahenham
+ Bingham
+ Hightown
+ Winersby
+ Yuleville
+ Tibsville
+ Welltown
+ Nicetown
+(12 rows)
+
+u0cichostepski=> select description, cast(cost_price * 100 as INT) AS cena from item;
+  description  | cena
+---------------+------
+ Wood Puzzle   | 1523
+ Rubic Cube    |  745
+ Linux CD      |  199
+ Tissues       |  211
+ Picture Frame |  754
+ Fan Small     |  923
+ Fan Large     | 1336
+ Toothbrush    |   75
+ Roman Coin    |  234
+ Carrier Bag   |    1
+ Speakers      | 1973
+(11 rows)
+
+u0cichostepski=> select lname as nazwisko from customer where town in ('Bingham', 'Nicetown');
+ nazwisko
+----------
+ Matthew
+ Matthew
+ Stones
+ Stones
+ Jones
+(5 rows)
+
+u0cichostepski=> SELECT title, fname, lname, town FROM customer WHERE (town='Bingham' OR town = 'Nicetown');
+ title |  fname  |  lname  |   town
+-------+---------+---------+----------
+ Miss  | Alex    | Matthew | Nicetown
+ Mr    | Neil    | Matthew | Nicetown
+ Mr    | Richard | Stones  | Bingham
+ Mrs   | Ann     | Stones  | Bingham
+ Mr    | Dave    | Jones   | Bingham
+(5 rows)
+
+u0cichostepski=> select description, sell_price from item where sell_price Between 7 and 10;
+  description  | sell_price
+---------------+------------
+ Picture Frame |       9.95
+(1 row)
+
+u0cichostepski=> select lname from customer where title in ('Mrs', 'Miss') and town in ('Bingham', 'Nicetown');
+  lname
+---------
+ Matthew
+ Stones
+(2 rows)
+
+u0cichostepski=> SELECT title, fname, lname, town FROM customer WHERE title<>'Mr' AND (town='Bingham' OR town = 'Nicetown');
+ title | fname |  lname  |   town
+-------+-------+---------+----------
+ Miss  | Alex  | Matthew | Nicetown
+ Mrs   | Ann   | Stones  | Bingham
+(2 rows)
+
+u0cichostepski=> select fname, lname from customer where fname like '_a%';
+ fname | lname
+-------+--------
+ Dave  | Jones
+ Laura | Hendy
+ David | Hudson
+(3 rows)
+
+u0cichostepski=> select fname, lname from customer where fname like '_a*';
+ fname | lname
+-------+-------
+(0 rows)
+
+u0cichostepski=> select fname, lname from customer where fname like '_a%';
+ fname | lname
+-------+--------
+ Dave  | Jones
+ Laura | Hendy
+ David | Hudson
+(3 rows)
+
+u0cichostepski=> select customer_id, town from customer limit 5;
+ customer_id |   town
+-------------+-----------
+           1 | Hightown
+           2 | Lowtown
+           3 | Nicetown
+           4 | Yuleville
+           5 | Oahenham
+(5 rows)
+
+u0cichostepski=> select customer_id, town from customer limit -5;
+B£¥D:  LIMIT mo¿e byæ ujemny
+u0cichostepski=> select customer_id, town from customer limit 5;
+ customer_id |   town
+-------------+-----------
+           1 | Hightown
+           2 | Lowtown
+           3 | Nicetown
+           4 | Yuleville
+           5 | Oahenham
+(5 rows)
