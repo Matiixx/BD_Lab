@@ -113,10 +113,12 @@ SELECT w.wypozyczenie_id,
                                              Now() - w.data_pozyczenia)))
 FROM   wypozyczenie w
        JOIN czytelnik c
-         ON w.czytelnik_id = c.czytelnik_id; 
+         ON w.czytelnik_id = c.czytelnik_id
+WHERE  w.data_zwrotu IS NULL; 
 
 --3.4
 SELECT w.wypozyczenie_id,
        w.data_pozyczenia
 FROM   wypozyczenie w
-WHERE  (SELECT Extract (day FROM Now() - w.data_pozyczenia)) > 7;
+WHERE  (SELECT Extract (day FROM Now() - w.data_pozyczenia)) > 7
+       AND w.data_zwrotu IS NULL; 
