@@ -201,305 +201,58 @@ INSERT INTO tramwaj
 VALUES      (6,
              2);
 
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 1, 1);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 2, 2);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 3, 3);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 4, 4);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 5, 5);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 6, 6);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 7, 7);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 8, 8);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 9, 9);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 10, 10);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 11, 11);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 12, 12);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 13, 13);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 14, 14);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 15, 15);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 16, 16);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (1, 17, 17);
+
 INSERT INTO trasa_przystanki
             (trasa_id,
-             tramwaj_id,
              przystanek_id,
              kolejnosc)
-VALUES      (1,
-             20,
+VALUES      (2,
              1,
              1);
 
 INSERT INTO trasa_przystanki
             (trasa_id,
-             tramwaj_id,
              przystanek_id,
              kolejnosc)
-VALUES      (1,
-             20,
+VALUES      (2,
              2,
              2);
 
 INSERT INTO trasa_przystanki
             (trasa_id,
-             tramwaj_id,
              przystanek_id,
              kolejnosc)
-VALUES      (1,
-             20,
+VALUES      (2,
              3,
              3);
 
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             4,
-             4);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             5,
-             5);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             6,
-             6);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             7,
-             7);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             8,
-             8);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             9,
-             9);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             10,
-             10);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             11,
-             11);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             12,
-             12);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             13,
-             13);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             14,
-             14);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             15,
-             15);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             16,
-             16);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (1,
-             20,
-             17,
-             17);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             1,
-             1);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             2,
-             2);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             3,
-             3);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             18,
-             4);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             19,
-             5);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             20,
-             6);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             21,
-             7);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             22,
-             8);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             23,
-             9);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             24,
-             10);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             25,
-             11);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             26,
-             12);
-
-INSERT INTO trasa_przystanki
-            (trasa_id,
-             tramwaj_id,
-             przystanek_id,
-             kolejnosc)
-VALUES      (2,
-             6,
-             27,
-             13);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 18, 4);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 19, 5);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 20, 6);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 21, 7);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 22, 8);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 23, 9);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 24, 10);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 25, 11);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 26, 12);
+INSERT INTO trasa_przystanki (trasa_id, przystanek_id, kolejnosc) VALUES (2, 27, 13);
 
 INSERT INTO odjazd
             (tramwaj_id)
