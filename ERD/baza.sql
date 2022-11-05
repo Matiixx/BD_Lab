@@ -830,12 +830,16 @@ VALUES      (3,
              '14:24:00');
 
 --1
-SELECT tp.tramwaj_id,
+SELECT t.tramwaj_id,
        p.nazwa
-FROM   trasa_przystanki tp
-       JOIN przystanek p
+FROM   przystanek p
+       JOIN trasa_przystanki tp
          ON p.przystanek_id = tp.przystanek_id
-WHERE  p.nazwa = 'lipska';
+       JOIN trasa tr
+         ON tr.trasa_id = tp.trasa_id
+       JOIN tramwaj t
+         ON tr.trasa_id = t.trasa_id
+WHERE  p.nazwa = 'lipska'; 
 
 --2
 SELECT r.godzina,
