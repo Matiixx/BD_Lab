@@ -38,14 +38,11 @@ CREATE TABLE IF NOT EXISTS trasa_przystanki
   (
      trasa_przystanki_id SERIAL NOT NULL,
      trasa_id            INTEGER NOT NULL,
-     tramwaj_id          INTEGER NOT NULL,
      przystanek_id       INTEGER NOT NULL,
      kolejnosc           INTEGER NOT NULL,
      CONSTRAINT trasa_przystanki_pk PRIMARY KEY(trasa_przystanki_id),
      CONSTRAINT trasa_id_fk FOREIGN KEY(trasa_id) REFERENCES trasa(trasa_id) ON
      DELETE CASCADE,
-     CONSTRAINT tramwaj_id_fk FOREIGN KEY(tramwaj_id) REFERENCES tramwaj(
-     tramwaj_id) ON DELETE CASCADE,
      CONSTRAINT przystanek_id_fk FOREIGN KEY(przystanek_id) REFERENCES
      przystanek(przystanek_id) ON DELETE CASCADE
   );
