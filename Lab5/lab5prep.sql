@@ -142,3 +142,39 @@ FROM   item i
 WHERE  NOT EXISTS (SELECT *
                    FROM   barcode b
                    WHERE  b.item_id = i.item_id); 
+
+--Widoki
+CREATE VIEW item_price AS SELECT item_id, description, CAST(sell_price AS FLOAT) AS price FROM item;
+SELECT * FROM item_price;
+
+CREATE VIEW dane AS SELECT fname ||' '|| lname AS name, town from customer;
+SELECT * FROM dane;
+
+CREATE VIEW all_items AS SELECT i.item_id, i.description, b.barcode_ean FROM item I, barcode b WHERE i.item_id=b.item_id;
+SELECT * FROM all_items;
+
+CREATE VIEW personel AS SELECT fname, lname, zipcode, town FROM customer;
+INSERT INTO personel (fname, lname, zipcode, town) VALUES ('Harry','Potter','WT3 8GM','Welltown');
+
+CREATE VIEW women AS SELECT title, fname, lname, zipcode, town FROM customer WHERE title <> 'Mr' ;
+CREATE VIEW women_check AS SELECT title, fname, lname, zipcode, town FROM customer WHERE title <> 'Mr' WITH CHECK OPTION;
+INSERT INTO women(title,fname, lname, zipcode, town) VALUES ('Mr','Tom','Sawyer','WT3 8GM','Welltown'); 
+INSERT INTO women_check(title,fname, lname, zipcode, town) VALUES ('Mr','Tom','Sawyer','WT3 8GM','Welltown');
+INSERT INTO women_check(title,fname, lname, zipcode, town) VALUES ('Mrs','Tom','Sawyer','WT3 8GM','Welltown');
+
+CREATE VIEW women AS SELECT title, fname, lname, zipcode, town FROM customer WHERE title <> 'Mr' ;
+CREATE VIEW women_town AS SELECT title, lname, zipcode, town FROM women WHERE town LIKE 'W%' WITH LOCAL CHECK OPTION;
+INSERT INTO women_town(title, lname, zipcode, town) VALUES ('Mr','Sawyer','WT3 8GM','Welltown');
+INSERT INTO women_town(title, lname, zipcode, town) VALUES ('Mr','Sawyer','WT3 8GM','Nicetown');
+
+CREATE VIEW women AS SELECT title, fname, lname, zipcode, town FROM customer WHERE title <> 'Mr' ;  
+CREATE VIEW women_town_check AS SELECT title, lname, zipcode, town FROM women WHERE town LIKE 'W%' WITH CASCADED CHECK OPTION;  
+INSERT INTO women_town_check(title, lname, zipcode, town) VALUES ('Miss','Poppins','WT3 8GM','Nicetown'); 
+INSERT INTO women_town_check(title, lname, zipcode, town) VALUES ('Mr','Sawyer','WT3 8GM','Nicetown');  
+INSERT INTO women_town_check(title, lname, zipcode, town) VALUES ('Miss','Poppins','WT3 8GM','Welltown');
+
+CREATE MATERIALIZED VIEW personel_m AS SELECT fname, lname, zipcode, town FROM customer WITH NO DATA;
+
+CREATE MATERIALIZED VIEW personel_f AS SELECT fname, lname, zipcode, town FROM customer WITH DATA;
+
+REFRESH MATERIALIZED VIEW personel_m;
