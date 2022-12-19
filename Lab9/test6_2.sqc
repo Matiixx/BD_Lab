@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include "test.h"
+  
+EXEC SQL BEGIN DECLARE SECTION;
+    char db[15];
+    char usr[15];
+    char pas[15];
+    char dbname[1024];
+    int id;
+    char fname[20];
+    char lname[20];
+EXEC SQL END DECLARE SECTION;
+  
+int main()
+{
+    strncpy(db,dbase,15);
+    strncpy(usr,user,15);
+    strncpy(pas,pass,15);
+    /* ECPGdebug(1,stderr);  */
+    EXEC SQL CONNECT TO :db AS con1  USER :usr USING :pas;
+    EXEC SQL SET SEARCH_PATH TO "lab9prep";
+  
+    EXEC SQL SELECT current_database() INTO :dbname;
+    printf("current database=%s \n", dbname);
+  
+    EXEC SQL DECLARE c1 CURSOR FOR SELECT customer_id, fname, lname  FROM customer ;
+  
+    EXEC SQL OPEN c1;
+  while(sqlca.sqlcode == 0) {
+    EXEC SQL FETCH c1 INTO :id, :fname, :lname;
+     if (SQLCODE == 0) 
+       printf("%d  %s  %s\n",id,fname,lname);
+   }
+    EXEC SQL CLOSE c1;
+  
+    EXEC SQL DISCONNECT ALL;
+    return 0;
+}

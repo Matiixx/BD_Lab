@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include "test.h"
+ 
+EXEC SQL BEGIN DECLARE SECTION;
+    char dbname[1024];
+    char db[15];
+    char usr[15];
+    char pas[15];
+    char insertStmt[100];
+    char sqlStmt[150];
+        int id;
+    char fname[20];
+    char lname[20];
+    int par_val;
+EXEC SQL END DECLARE SECTION;
+
+static void handle_error(void);
+int main()
+{
+ 
+   EXEC SQL WHENEVER SQLERROR DO handle_error();
+   ECPGdebug(1,stderr);
+   strncpy(db,dbase,15);
+   strncpy(usr,user,15);
+   strncpy(pas,pass,15);
+   EXEC SQL CONNECT TO :db AS con1  USER :usr USING :pas;
+    EXEC SQL SET SEARCH_PATH TO "lab9prep";
+ 
+   
+   strncpy(sqlStmt,"SELECT customer_id, fname, lname FROM customer WHERE customer_id = ?", 100);
+   EXEC SQL PREPARE s1 FROM :sqlStmt;
+   par_val = 75; 
+   EXEC SQL EXECUTE s1 INTO :id, :fname, :lname USING :par_val; 
+   printf("Zwrocony rekord:  %d  %s  %s\n",id,fname,lname);
+   fprintf(stderr, "ok\n");
+   return 0;
+}
+static void handle_error(void)
+{
+   fprintf(stderr, "%s\n", sqlca.sqlerrm.sqlerrmc);
+   EXEC SQL WHENEVER SQLERROR CONTINUE;
+   /* EXEC SQL ROLLBACK RELEASE; */
+}

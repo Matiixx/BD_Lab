@@ -1,0 +1,75 @@
+//Program pgc poprawiający wartości nazwiska i/lub imienia dla zadanego uczestnika (UPDATE)
+
+#include <stdio.h>
+#include <string.h>
+
+char * p_dbase = "povfyrno@kandula.db.elephantsql.com";	
+char * p_user = "povfyrno";
+char * p_pass = "MMjTPsg4Bv5LASpWXd9zkQgVB2ZwTurJ";
+
+EXEC SQL BEGIN DECLARE SECTION;
+	char dbname[1024];
+	char connection_string[128];
+	char user[64];
+	char password[32];
+
+	int id;
+	char fname[64];
+	char lname[64];
+	char insertCmd[512];
+EXEC SQL END DECLARE SECTION;
+
+// error handlers
+EXEC SQL WHENEVER SQLERROR CALL crash();
+EXEC SQL WHENEVER NOT FOUND DO BREAK;
+ 
+static void crash(void)
+{
+    // stop recursion
+    EXEC SQL WHENEVER SQLERROR CONTINUE;
+ 
+    fprintf(
+        stderr,
+        "database serious error %s:\n%s\n",
+        sqlca.sqlstate,
+        sqlca.sqlerrm.sqlerrmc
+    );
+ 
+    EXEC SQL ROLLBACK;
+    EXEC SQL DISCONNECT;
+ 
+    exit(1);
+ 
+    // restore the original handler
+    EXEC SQL WHENEVER SQLERROR CALL crash();
+}
+
+int main()
+{
+	printf("Postgres Embeded SQL Application\n Podaj ID uzytkownika ktorego chcesz zaktualizowac:\n");
+
+	char id[5];
+	char cmd[512];
+
+	scanf("%s", &id);
+
+	// initialize SQL variable
+	strcpy(connection_string,p_dbase);
+	strcpy(user,p_user);
+	strcpy(password,p_pass);
+
+
+	EXEC SQL CONNECT TO :connection_string AS conn  USER :user USING :password;
+
+	strcat(cmd, "UPDATE uczestnik SET imie = 'Robert', nazwisko = 'Maklowicz' WHERE id_uczestnik = ");
+	strcat(cmd, id);
+	strcat(cmd, ";");
+	strcpy(insertCmd, cmd);
+
+	EXEC SQL EXECUTE IMMEDIATE :insertCmd;
+
+    	EXEC SQL COMMIT;
+	// close all connection
+	EXEC SQL DISCONNECT ALL;
+	return 0;
+}

@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+char * p_dbase = "";
+char * p_user = "";
+char * p_pass = "";
+
+EXEC SQL BEGIN DECLARE SECTION;
+	char dbname[1024];
+	char connection_string[128];
+	char user[64];
+	char password[32];
+
+	int id;
+	char fname[64];
+	char lname[64];
+	char selectCmd[512];
+EXEC SQL END DECLARE SECTION;
+
+EXEC SQL WHENEVER NOT FOUND DO BREAK;
+
+int main()
+{
+	printf("Postgres Embeded SQL Application\n");
+
+	// initialize SQL variable
+	strcpy(connection_string,p_dbase);
+	strcpy(user,p_user);
+	strcpy(password,p_pass);
+
+	EXEC SQL DECLARE cur_uczestnik CURSOR FOR SELECT uczestnik.id_uczestnik,imie,nazwisko  FROM uczestnik JOIN uczest_kurs ON uczestnik.id_uczestnik = uczest_kurs.id_uczestnik WHERE id_kurs = 1 ORDER BY id_uczestnik;
+
+	EXEC SQL CONNECT TO :connection_string AS conn  USER :user USING :password;
+
+	// open a cursor
+    	EXEC SQL OPEN cur_uczestnik;
+ 
+    	// loop up to end of data
+	for(;;)
+	{
+        	// fetch next record
+	        EXEC SQL FETCH NEXT FROM cur_uczestnik INTO :id, :fname, :lname;
+    	printf("%d %s %s \n", id, fname, lname);
+	}
+ 
+	EXEC SQL CLOSE cur_uczestnik;
+
+	
+    	
+	// close all connection
+	EXEC SQL DISCONNECT ALL;
+	return 0;
+}

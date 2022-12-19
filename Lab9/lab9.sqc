@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include "lab9.h"
+
+EXEC SQL BEGIN DECLARE SECTION;
+    char dbname[1024];
+    char db[15];
+    char usr[15];
+    char pas[15];
+    char sch[15];
+    char id_arg[5];
+    int id;
+    char desc[20];
+    int quant;
+EXEC SQL END DECLARE SECTION;
+
+int main(int argc, char **argv) {
+
+    if(argc == 1)
+    {
+        printf("Podaj id podczas wywolania\n");
+        return 0;
+    }
+
+    strncpy(db,dbase,15);
+    strncpy(usr,user,15);
+    strncpy(pas,pass,15);
+    strncpy(sch,schema,15);
+    strncpy(id_arg,argv[1],5);
+    EXEC SQL CONNECT TO :db AS con1  USER :usr USING :pas;
+    EXEC SQL SET SEARCH_PATH TO :sch;
+
+    EXEC SQL SELECT current_database() INTO :dbname;
+    printf("current database=%s\nWyszukiwanie zamowien dla uzytkownika o id=%s \n", dbname, id_arg);
+
+    EXEC SQL DECLARE c1 CURSOR FOR SELECT oi.orderinfo_id, i.description, ol.quantity FROM orderinfo oi JOIN orderline ol USING(orderinfo_id) JOIN item i USING(item_id) WHERE oi.customer_id = :id_arg;
+
+    EXEC SQL OPEN c1;
+    printf("[\n");
+    while(sqlca.sqlcode == 0) {
+        EXEC SQL FETCH c1 INTO :id, :desc, :quant;
+        if (SQLCODE == 0) 
+            printf(" {\"orderinfo_id\":%d,\"description\":\"%s\",\"quantity\":%d},\n", id, desc, quant);
+    }
+    printf("]\n");
+    EXEC SQL CLOSE c1;
+
+    EXEC SQL DISCONNECT ALL;
+
+    return 0;
+}

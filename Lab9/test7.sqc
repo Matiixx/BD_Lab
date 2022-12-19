@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include "test.h"
+
+EXEC SQL BEGIN DECLARE SECTION;
+char dbname[1024];
+char db[15];
+char usr[15];
+char pas[15];
+char insertStmt[100];
+EXEC SQL END DECLARE SECTION;
+
+static void handle_error(void);
+int main()
+{
+
+EXEC SQL WHENEVER SQLERROR DO handle_error();
+ECPGdebug(1,stderr);
+strncpy(db,dbase,15);
+strncpy(usr,user,15);
+strncpy(pas,pass,15);
+EXEC SQL CONNECT TO :db AS con1  USER :usr USING :pas;
+    EXEC SQL SET SEARCH_PATH TO "lab9prep";
+
+strcpy(insertStmt,"INSERT INTO customer VALUES (75,'Mr','Adam','Adamski','Dluga','krakow','NT3 7RT','267 1232')");
+
+EXEC SQL EXECUTE IMMEDIATE :insertStmt; 
+//EXECUTE IMMEDIATE automatycznie nie wykonuje COMMIT  przy operacji DML. Trzeba to wykonać osobno.
+EXEC SQL COMMIT;
+fprintf(stderr, "ok\n");
+
+return 0;
+}
+
+static void handle_error(void)
+{
+fprintf(stderr, "%s\n", sqlca.sqlerrm.sqlerrmc);
+EXEC SQL WHENEVER SQLERROR CONTINUE;
+/* EXEC SQL ROLLBACK RELEASE; */
+}
